@@ -1,4 +1,7 @@
+import { Injectable } from '@nestjs/common';
+
 /* eslint-disable prettier/prettier */
+@Injectable()
 export class UserRepository {
   private users = [];
 
