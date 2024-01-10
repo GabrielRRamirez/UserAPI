@@ -13,4 +13,10 @@ export class UserRepository {
   async list() {
     return this.users;
   }
+
+  async existsByEmail(email: string): Promise<boolean> {
+    const user = this.users.find(findUser => findUser.email === email);
+
+    return user !== undefined;
+  }
 }
