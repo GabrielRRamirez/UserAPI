@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { UserEntity } from './entities/user.entity';
 
 /* eslint-disable prettier/prettier */
 @Injectable()
 export class UserRepository {
-  private users = [];
+  private users: UserEntity[] = [];
 
-  async save(user) {
+  async save(user: UserEntity) {
     this.users.push(user);
     console.log(this.users);
   }
 
-  async list() {
+  async list(): Promise<UserEntity[]> {
     return this.users;
   }
 
