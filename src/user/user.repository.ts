@@ -16,6 +16,10 @@ export class UserRepository {
     return this.users;
   }
 
+  async findById(id: string): Promise<UserEntity> {
+    return this.users.find(findUser => findUser.id === id);
+  }
+
   async existsByEmail(email: string): Promise<boolean> {
     const user = this.users.find(findUser => findUser.email === email);
 
@@ -23,7 +27,7 @@ export class UserRepository {
   }
 
   async update(id: string, updateUser: Partial<UpdateUserDto>): Promise<UserEntity> {
-    const user = this.users.find(findUser => findUser.id === id);
+    const user = await this.findById(id);
 
     if(!user) {
       throw new Error('User not Found!');
@@ -36,6 +40,18 @@ export class UserRepository {
 
       user[chave] = valor;
     })
+
+    return user;
+  }
+
+  async delete(id: string): Promise<UserEntity> {
+    const user = this.findById(id);
+
+    if(!user) {
+      throw new Error('User not Found!');
+    }
+
+    this.users = this.users.filter(u => u.id !== id);
 
     return user;
   }
