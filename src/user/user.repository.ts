@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from './entities/user.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 /* eslint-disable prettier/prettier */
 @Injectable()
@@ -19,5 +20,23 @@ export class UserRepository {
     const user = this.users.find(findUser => findUser.email === email);
 
     return user !== undefined;
+  }
+
+  async update(id: string, updateUser: Partial<UpdateUserDto>): Promise<UserEntity> {
+    const user = this.users.find(findUser => findUser.id === id);
+
+    if(!user) {
+      throw new Error('User not Found!');
+    }
+
+    Object.entries(updateUser).forEach(([chave, valor]) => {
+      if(chave === 'id') {
+        return;
+      }
+
+      user[chave] = valor;
+    })
+
+    return user;
   }
 }
