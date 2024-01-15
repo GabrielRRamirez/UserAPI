@@ -10,7 +10,7 @@ import {
 @Entity({ name: 'users' })
 export class UserEntity {
   @PrimaryGeneratedColumn('increment')
-  id: string;
+  id: number;
 
   @Column({ name: 'name', length: 150, nullable: false })
   name: string;

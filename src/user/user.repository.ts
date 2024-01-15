@@ -16,7 +16,7 @@ export class UserRepository {
     return this.users;
   }
 
-  async findById(id: string): Promise<UserEntity> {
+  async findById(id: number): Promise<UserEntity> {
     return this.users.find(findUser => findUser.id === id);
   }
 
@@ -26,7 +26,7 @@ export class UserRepository {
     return user !== undefined;
   }
 
-  async update(id: string, updateUser: Partial<UpdateUserDto>): Promise<UserEntity> {
+  async update(id: number, updateUser: Partial<UpdateUserDto>): Promise<UserEntity> {
     const user = await this.findById(id);
 
     if(!user) {
@@ -44,7 +44,7 @@ export class UserRepository {
     return user;
   }
 
-  async delete(id: string): Promise<UserEntity> {
+  async delete(id: number): Promise<UserEntity> {
     const user = this.findById(id);
 
     if(!user) {

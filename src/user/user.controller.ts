@@ -2,42 +2,37 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserEntity } from './entities/user.entity';
-import { v4 as uuid } from 'uuid'; 
 import { UserResponseDto } from './dto/user-response.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserService } from './user.service';
 
 @Controller('/user')
 export class UserController {
 
-    constructor(private readonly userRepository:UserRepository){}
+    constructor(
+      private readonly userRepository:UserRepository,
+      private readonly userService: UserService
+    ){}
     
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    const entity = new UserEntity();
-    entity.id = uuid();
-    entity.name = createUserDto.name;
-    entity.email = createUserDto.email;
-    entity.password = createUserDto.password;
-
-    this.userRepository.save(entity);
-    return new UserResponseDto(entity.id, entity.name);
+    return await this.userService.create(createUserDto);
   }
 
   @Get()
   async list(): Promise<UserResponseDto[]> {
-    return (await this.userRepository.list()).map(user => new UserResponseDto(user.id, user.name));
+    return await this.userService.listAll();
   }
 
   @Put('/:id')
-  async update(@Param('id') id: string, @Body() updateUser: UpdateUserDto): Promise<UserResponseDto> {
+  async update(@Param('id') id: number, @Body() updateUser: UpdateUserDto): Promise<UserResponseDto> {
     const updatedUser = await this.userRepository.update(id, updateUser);
     
     return new UserResponseDto(updatedUser.id, updatedUser.name);
   }
 
   @Delete('/:id')
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id') id: number) {
       const deletedUser = await this.userRepository.delete(id);
 
       return {
